@@ -24,6 +24,32 @@ inventoryRouter.route('/')
         }
     })
 
+    inventoryRouter.route('/:id')
+        .put(async (req, res, next) => {
+            try {
+                const id = req.params.id;
+                const productToBeUpdated = await Item.findByIdAndUpdate(
+                    id,
+                    req.body,
+                    { new: true }
+                );
+                return res.status(201).send(productToBeUpdated);
+            } catch (error) {
+                res.status(500);
+                return next(error);
+            }
+        })
+        .delete(async (req, res, next) => {
+            try {
+                const id = req.params.id;
+                const productToBeDeleted = await Item.findOneAndDelete({_id: id});
+                return res.status(200).send(`You Have Successfully Deleted ${productToBeDeleted.productName}`);
+            } catch (error) {
+                res.status(500);
+                return next(error);
+            }
+        })
+    
     inventoryRouter.route('/placeorder')
         .get(async (req, res, next) => {
             try {
